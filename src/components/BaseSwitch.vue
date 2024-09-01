@@ -1,42 +1,40 @@
 <template>
   <el-switch
-    v-model="isDark"
-    :active-value="true"
-    :inactive-value="false"
-    active-color="#409EFF"
-    inactive-color="#D3DCE6"
+    :model-value="modelValue"
+    :active-value="activeValue"
+    :inactive-value="inactiveValue"
+    :active-color="activeColor"
+    :inactive-color="inactiveColor"
+    @update:model-value="updateModelValue"
   ></el-switch>
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { defineProps, defineEmits } from 'vue'
 
-const isDark = ref(false)
-
-function updateHtmlClass(isDark) {
-  const html = document.documentElement
-  if (isDark) {
-    html.classList.add('dark')
-  } else {
-    html.classList.remove('dark')
-  }
-}
-
-function saveThemePreference(isDark) {
-  localStorage.setItem('darkThemeEnabled', isDark ? 'true' : 'false')
-}
-
-function loadThemePreference() {
-  const storedTheme = localStorage.getItem('darkThemeEnabled')
-  return storedTheme === 'true'
-}
-
-watch(isDark, (newTheme) => {
-  updateHtmlClass(newTheme)
-  saveThemePreference(newTheme)
+const props = defineProps({
+  modelValue: Boolean,
+  activeValue: {
+    type: Boolean,
+    default: true,
+  },
+  inactiveValue: {
+    type: Boolean,
+    default: false,
+  },
+  activeColor: {
+    type: String,
+    default: '#409EFF',
+  },
+  inactiveColor: {
+    type: String,
+    default: '#D3DCE6',
+  },
 })
 
-onMounted(() => {
-  isDark.value = loadThemePreference()
-})
+const emits = defineEmits(['update:modelValue'])
+
+function updateModelValue(value) {
+  emits('update:modelValue', value)
+}
 </script>

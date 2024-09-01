@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
+import PageHome from '../views/PageHome.vue'
+import PageConvert from '../views/PageConvert.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,7 +8,12 @@ const router = createRouter({
     {
       path: '/',
       name: 'Home',
-      component: Home,
+      component: PageHome,
+    },
+    {
+      path: '/convert',
+      name: 'Convert',
+      component: PageConvert,
     },
   ],
 })

@@ -2,7 +2,7 @@ import axios from 'axios'
 
 function api() {
   return axios.create({
-    baseURL: 'https://api.openweathermap.org/data/2.5',
+    baseURL: 'https://status.neuralgeneration.com',
     params: {
       appid: import.meta.env.VITE_API_TOKEN,
       lang: 'ru',
@@ -11,5 +11,5 @@ function api() {
 }
 
 export default {
-  fetchWeather: (city, units) => api().get('/weather', { params: { q: city, units } }),
+  getCurrency: () => api().get('/api/currency'),
 }
