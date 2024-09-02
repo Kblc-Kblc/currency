@@ -56,19 +56,41 @@ const validatedAmountFrom = computed({
   },
 })
 
+const getRate = (from, to) => {
+  if (from.toLowerCase() === to.toLowerCase()) {
+    return 1
+  }
+  const directRate = currencyStore.rates[`${from.toLowerCase()}-${to.toLowerCase()}`]
+  if (directRate) {
+    return directRate
+  }
+
+  const fromToUSD = currencyStore.rates[`${from.toLowerCase()}-usd`]
+  const usdToTo = currencyStore.rates[`usd-${to.toLowerCase()}`]
+  if (fromToUSD && usdToTo) {
+    return fromToUSD * usdToTo
+  }
+
+  const fromToRub = currencyStore.rates[`${from.toLowerCase()}-rub`]
+  const rubToTo = currencyStore.rates[`rub-${to.toLowerCase()}`]
+  if (fromToRub && rubToTo) {
+    return fromToRub * rubToTo
+  }
+
+  return 1
+}
+
 const convertCurrency = () => {
-  if (amountFrom.value == null || amountFrom.value === '') {
+  if (!amountFrom.value) {
     amountTo.value = ''
     return
   }
 
-  const rateFrom = currencyStore.rates[`${currencyFrom.value.toLowerCase()}-rub`] || 1
-  const rateTo = currencyStore.rates[`rub-${currencyTo.value.toLowerCase()}`] || 1
-
-  amountTo.value = ((amountFrom.value / rateFrom) * rateTo).toFixed(2)
+  const rate = getRate(currencyFrom.value, currencyTo.value)
+  amountTo.value = (amountFrom.value * rate).toFixed(2)
 }
 
-watch([currencyFrom, currencyTo], () => {
+watch([currencyFrom, currencyTo, amountFrom], () => {
   convertCurrency()
 })
 
